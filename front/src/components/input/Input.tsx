@@ -1,27 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Response } from "../../models/response.model";
 import { Image } from "../gallery/Image";
 
 export const Input = () => {
   const [siteUrl, setSiteUrl] = useState("");
   const [imgUrls, setImgUrls] = useState<Response[]>([]);
+  const [limit, setLimit] = useState(50);
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
     setSiteUrl(target.value);
   };
 
-  const onSubmitHandler = async () => {
+  useEffect(() => {}, []);
+
+  const getImages = async () => {
     const response = await fetch("http://localhost:3000", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ url: siteUrl }),
+      body: JSON.stringify({ url: siteUrl, limit }),
     });
 
     const data = await response.json();
     setImgUrls(data);
+  };
+
+  const onSubmitHandler = () => {
+    getImages();
+  };
+
+  const onLoadMoreHandler = () => {
+    setLimit((prev) => (prev += 25));
+    getImages();
   };
 
   return (
@@ -46,6 +58,7 @@ export const Input = () => {
           <Image img={img} key={img.id} />
         ))}
       </div>
+      <button onClick={onLoadMoreHandler}>Load More</button>
     </div>
   );
 };

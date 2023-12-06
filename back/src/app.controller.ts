@@ -8,7 +8,7 @@ export class AppController {
 
   @Post()
   getLink(@Body() body) {
-    return this.appService.getLinks(body.url);
+    return this.appService.getLinks(body);
   }
 
   @Post('/download')

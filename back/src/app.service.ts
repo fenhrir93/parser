@@ -8,9 +8,9 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async getLinks(link: string) {
+  async getLinks({ url, limit }) {
     const urls = [];
-    const page = await axios.get(link);
+    const page = await axios.get(url);
     fs.writeFileSync('logs.json', JSON.stringify(page.data));
 
     const urlRegex = /(?:https?|ftp):\/\/[^\s/$.?#].[^\s]*\.(jpg|webp)\b/g;
@@ -20,7 +20,7 @@ export class AppService {
     const uniqueMatchesArray = Array.from(uniqueMatches);
 
     for (let i = 0; i < uniqueMatchesArray.length; i++) {
-      if (i === 50) break;
+      if (i === limit) break;
       urls.push({
         url: uniqueMatchesArray[i].replace(/_\d+px/, ''),
         id: i,
