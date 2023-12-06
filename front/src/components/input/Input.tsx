@@ -1,9 +1,7 @@
 import React, { useState } from "react";
+import { Response } from "../../models/response.model";
+import { Image } from "../gallery/Image";
 
-interface Response {
-  url: string;
-  id: number;
-}
 export const Input = () => {
   const [siteUrl, setSiteUrl] = useState("");
   const [imgUrls, setImgUrls] = useState<Response[]>([]);
@@ -25,18 +23,29 @@ export const Input = () => {
     const data = await response.json();
     setImgUrls(data);
   };
+
   return (
-    <div>
-      <input type="text" value={siteUrl} onChange={onChangeHandler} />
-      <button onClick={onSubmitHandler}>Submit</button>
+    <div className="flex flex-col gap-4">
+      <section className="flex justify-center">
+        <input
+          type="text"
+          value={siteUrl}
+          onChange={onChangeHandler}
+          className="w-[90vw] border-2 border-gray-300 rounded-md p-2"
+        />
+        <button
+          onClick={onSubmitHandler}
+          className="bg-violet-800 text-white border-2 border-violet-500 rounded-md p-2 ml-2"
+        >
+          Submit
+        </button>
+      </section>
       {/* CORS */}
-      {/* <img
-        src="https://waifubitches.com/images/a/604/-203367964/280282413/457255412.jpg"
-        alt=""
-      /> */}
-      {imgUrls.map((img) => (
-        <img src={img.url} key={img.id} alt="" />
-      ))}
+      <div className="flex flex-wrap h-[70vh] gap-2 overflow-auto justify-center">
+        {imgUrls.map((img) => (
+          <Image img={img} key={img.id} />
+        ))}
+      </div>
     </div>
   );
 };
